@@ -1,41 +1,35 @@
-const {test, expect} = require('@playwright/test')
+const { test, expect } = require('@playwright/test');
+test.describe("The Heroku App Tests Login", () => {
+    test("Validate elements on The Heroku App homepage", async ({ page }) => {
+        // Visit the site
+        await page.goto("https://the-internet.herokuapp.com/login");
+        await expect(page.locator('#username')).toBeVisible();
+        await expect(page.locator('[name="password"]')).toBeVisible();
+        await expect(page.getByRole('button', { name: 'Login' })).toBeVisible();
+        await page.locator('#username').fill('tomsmith');
+        await page.locator('#password').fill('SuperSecretPassword!');
+        await page.getByRole('button', { name: 'Login' }).click();
+        await expect(page).toHaveURL(/.*\/secure/);
+        await expect(page.locator('h2')).toContainText('Secure Area');
+        await page.screenshot({ path: 'screenshot.png' });
+    });
 
-test.describe("Pruebas sobre Form Validation", () => {
-    test("Login con datos válidos", async ({page}) => {
-        await page.goto("https://the-internet.herokuapp.com/login")
-        await expect(page.locator("#username")).toBeVisible();
-        await expect(page.locator("[name='password']")).toBeVisible();
-        await expect(page.getByRole("button", {name: "login"})).toBeVisible();
-    })
+    test("Login con datos no válidos", async ({ page }) => {
+        //visitar el sitio
+        await page.goto("https://the-internet.herokuapp.com/login");
+        await expect(page.locator('#username')).toBeVisible();
+        await expect(page.locator('[name="password"]')).toBeVisible();
+        await expect(page.getByRole('button', { name: 'Login' })).toBeEnabled();
+        await page.fill('#username', 'tomperez');
+        await page.fill('[name="password"]', 'SuperSecretWrongPassword!');
+        await page.click('button[type="submit"]');
+        await expect(page).toHaveURL('https://the-internet.herokuapp.com/login');
+    });
 
-    //
-   
+});
+/*
+test.describe("incio exitoso", () => {
+    test("Validar inicio de sesion exitoso", async ({page}) => {
 
-test.describe("tercera prueba",()=>{
-    test("prueba valida",async({ page })=>{
-
-    await page.goto("https://the-internet.herokuapp.com/login");
-    await page.waitForLoadState('networkidle');
-    await page.fill("#username","tomsmith");
-    await page.fill("#password","SuperSecretPassword!");
-    await page.click('button[type="submit"]');
-    await expect(page.locator('a[href="/logout"]')).toBeVisible();
-})
-    test("prueba invalida",async({ page })=>{
-    await page.goto("https://the-internet.herokuapp.com/login");
-    await page.waitForLoadState('networkidle');
-    await page.fill("#username","tomsmith");
-    await page.fill("#password","SuperSecretPassword!P");
-    await page.click('button[type="submit"]');
-    await expect(page.locator('a[href="/logout"]')).toBeVisible();
-})
- test("prueba valida sin visualizar el logout",async({ page })=>{
-    await page.goto("https://the-internet.herokuapp.com/login");
-    await page.waitForLoadState('networkidle');
-    await page.fill("#username","tomsmith");
-    await page.fill("#password","SuperSecretPassword!d");
-    await page.click('button[type="submit"]');
-    await expect(page.locator('a[href="/logout"]')).not.toBeVisible();
-})
-})
-})
+});
+*/

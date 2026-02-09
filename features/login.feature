@@ -22,3 +22,8 @@ Feature: Funcionalidad de Login
         When ingresa usuario "pepito2" y clave "" y presiona el botón "Login"
         Then debe permanecer en la página de login
         And debe ver mensaje de error de credenciales inválidas
+
+    Scenario: Login fallido con otra credencial vacia
+        When ingresa usuario "" y clave "" y presiona el botón "Login"
+        Then debe permanecer en la página de login
+        And debe ver mensaje de error de credenciales inválidas
